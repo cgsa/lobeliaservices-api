@@ -33,16 +33,16 @@ class DeudasController extends Controller
         ])->get(); 
         
         
-        $deudaFinal = $deudas->map(function($deuda){
-            $deuda['logo'] = (new Entidad())->getLogo($deuda);
-            return $deuda;
-        });
+//         $deudaFinal = $deudas->map(function($deuda){
+//             $deuda['logo'] = (new Entidad())->getLogo($deuda);
+//             return $deuda;
+//         });
             //dd($deudaFinal);
 
 //         $handler = new Handler($documento);
 //         $handler->build();
         
-        return response(['deudas'=>$deudaFinal]);
+        return response(['deudas'=>$deudas]);
     }
     
     /**
