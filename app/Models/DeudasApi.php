@@ -35,4 +35,6 @@ class DeudasApi extends Model
         'producto'
         
     ];
+    
+    
 }

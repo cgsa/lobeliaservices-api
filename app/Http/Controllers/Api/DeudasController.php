@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DeudasApi;
 use App\Http\ApiHandler\CGDeudas;
+use App\Models\Entidad;
 
 class DeudasController extends Controller
 {
@@ -30,11 +31,18 @@ class DeudasController extends Controller
             ['idestadodeuda', '=', '1'],
             ['doc_deudor', '=',$documento],
         ])->get(); 
+        
+        
+        $deudaFinal = $deudas->map(function($deuda){
+            $deuda['logo'] = (new Entidad())->getLogo($deuda);
+            return $deuda;
+        });
+            //dd($deudaFinal);
 
 //         $handler = new Handler($documento);
 //         $handler->build();
         
-        return response(['deudas'=>$deudas]);
+        return response(['deudas'=>$deudaFinal]);
     }
     
     /**
