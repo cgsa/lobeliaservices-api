@@ -3,6 +3,7 @@ namespace App\Http\ApiHandler;
 
 use GuzzleHttp;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Support\Facades\DB;
 
 class PyP implements Conector
 {
@@ -42,9 +43,11 @@ class PyP implements Conector
     
     protected function params()
     {
+        $user = $this->findGender(request('documento'));        
+        
         return implode('/', [
             request('documento'),
-            'M',
+            $user[0]->sexo,
             'json'
         ]);
     }
@@ -52,11 +55,7 @@ class PyP implements Conector
     
     public function start()
     {
-        $response = $this->conection()->setDataResponse($this->getData());
-        
-        if(!$this->verifyResult($response->result)){
-            return $response;
-        }
+        return $this->conection()->setDataResponse($this->getData());
         
     }
     
@@ -64,18 +63,22 @@ class PyP implements Conector
     
     private function setDataResponse(Response $response)
     {
-        if($response->getStatusCode() == 200){
-            
-            $this->result = json_decode((string) $response->getBody(), true);
-            return $this;
+        if($response->getStatusCode() == 200){            
+            $this->result = json_decode((string) $response->getBody(), true);            
         }
+        
+        return $this;
     }
     
     
     
     public function getResult()
     {
-        return $this->result['RESULTADO']['Deudores_de_BCRA_']['row'];
+        if(isset($this->result['RESULTADO']['Deudores_de_BCRA_']['row'])){
+            return $this->result['RESULTADO']['Deudores_de_BCRA_']['row'];
+        }
+        
+        return null;
     }
     
     
@@ -83,7 +86,16 @@ class PyP implements Conector
     
     private function verifyResult(array $data)
     {
-        return isset($data['RESULTADO']['ERROR']) ?? false;
+        return isset($data['RESULTADO']['ERROR'])? true : false;
+    }
+    
+    
+    private function findGender($documento)
+    {
+        return DB::connection('mysqlcomopago')->select('SELECT sexo FROM usr_usuarios_sistema WHERE rfc=:documento LIMIT 1;', [
+            'documento'=>$documento
+        ]);
+        
     }
 
 
