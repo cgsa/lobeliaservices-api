@@ -18,9 +18,14 @@ class Handler
     private $document;
     
     
-    public function __construct( $document )
+    public function __construct( $document , $auto = false)
     {
         $this->document = $document;
+        
+        if($auto)
+        {
+            $this->changeStatus();
+        }
     }
     
     
@@ -34,7 +39,7 @@ class Handler
             
             foreach ($this->structs as $struct){
                 
-                $this->process(new $struct);
+                $this->process( new $struct );
             }
             
             $this->registerSync();
@@ -47,7 +52,7 @@ class Handler
             DB::connection('mysqlcomopago')->rollback();
         }
         
-        DB::connection('mysqlcomopago')->commit();
+        //DB::connection('mysqlcomopago')->commit();
     }
     
     
@@ -59,8 +64,8 @@ class Handler
     
     private function process(Conector $conn)
     {
-        $data = $conn->start();
-        if(is_countable($data->getResult())){
+        $data = $conn->setDocument($this->document)->start();
+        if(is_countable($data->getResult())  && count($data->getResult()) > 0 ){
             
             foreach ($data->getResult() as $value){
                 $this->insertData($conn->getSchema($value));

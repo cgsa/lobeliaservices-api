@@ -12,10 +12,20 @@ class PyP implements Conector
     
     private $result;
     
+    private $document;
+    
     private $config = [
         'base_uri'=>'https://www.pypdatos.com.ar'
         
     ];
+    
+    
+    
+    public function setDocument( $documento )
+    {
+        $this->document = $documento;
+        return $this;
+    }
     
     
     /**
@@ -43,10 +53,10 @@ class PyP implements Conector
     
     protected function params()
     {
-        $user = $this->findGender(request('documento'));        
+        $user = $this->findGender($this->document);        
         
         return implode('/', [
-            request('documento'),
+            $this->document,
             $user[0]->sexo,
             'json'
         ]);
@@ -78,7 +88,7 @@ class PyP implements Conector
             return $this->result['RESULTADO']['Deudores_de_BCRA_']['row'];
         }
         
-        return null;
+        return false;
     }
     
     

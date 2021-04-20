@@ -11,6 +11,17 @@ class CG implements Conector
     
     private $result;
     
+    private $document;
+    
+    
+    
+    public function setDocument( $documento )
+    {
+        $this->document = $documento;
+        return $this;
+    }
+    
+        
     public function getResult()
     {
         return $this->result;
@@ -32,10 +43,10 @@ class CG implements Conector
 
     public function getData()
     {
-        
+        $user = $this->findGender($this->document); 
         return $this->conn->select('call comopago_sp01_deudas(:tipo, :documento);', [
-            'documento'=>request('documento'),
-            'tipo'=>request('tipoDocumento')
+            'documento'=> $this->document,
+            'tipo'=>$user[0]->tipodocumento
         ]);
     }
     
@@ -43,13 +54,23 @@ class CG implements Conector
     {
         if(is_countable($data) && count($data) > 0){
             $this->result = $data;
-            return $this;
         }
+        
+        return $this;
     }
 
     public function getSchema($data)
     {
         return new CGScheme($data);
+    }
+    
+    
+    private function findGender($documento)
+    {
+        return DB::connection('mysqlcomopago')->select('SELECT tipodocumento FROM usr_usuarios_sistema WHERE rfc=:documento LIMIT 1;', [
+            'documento'=>$documento
+        ]);
+        
     }
 
 }

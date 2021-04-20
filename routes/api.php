@@ -46,6 +46,7 @@ Route::group([
     
     Route::get('deudas/{documento}/{tipoDocumento}',[DeudasController::class, 'deudas']);
     Route::get('deuda/detalle/{iddeuda}',[DeudasController::class, 'deudadetalle']);
+    Route::post('deuda/create/refinanciacion',[DeudasController::class, 'createRefinanciacion']);
     
 });
 

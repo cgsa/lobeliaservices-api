@@ -26,12 +26,7 @@ class DeudasController extends Controller
     public function deudas($documento,$tipoDocumento)
     {
         
-        
-        $deudas = DeudasApi::where([
-            ['idestadodeuda', '=', '1'],
-            ['doc_deudor', '=',$documento],
-        ])->get(); 
-        
+        $deudas = new CGDeudas();        
         
 //         $deudaFinal = $deudas->map(function($deuda){
 //             $deuda['logo'] = (new Entidad())->getLogo($deuda);
@@ -42,7 +37,7 @@ class DeudasController extends Controller
 //         $handler = new Handler($documento);
 //         $handler->build();
         
-        return response(['deudas'=>$deudas]);
+        return response(['deudas'=>$deudas->findDeudaByDocument($documento)]);
     }
     
     /**
@@ -55,6 +50,28 @@ class DeudasController extends Controller
     {
         $detalle = new CGDeudas();        
         return response($detalle->getDeudaDetalle($iddeuda));
+        
+    }
+    
+    /**
+     * Return an json with all debts by user.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response 
+     */
+    public function createRefinanciacion(Request $request )
+    {
+        $detalle = new CGDeudas();
+        $cls = new \stdClass();
+        $cls->iddeuda = $request->get('deuda');
+        
+        $planExistente = $detalle->getPlanesCreados($cls);
+        
+        if( is_countable($planExistente) && count($planExistente) > 0 ){
+            return response($detalle->getDeudaDetalle($cls->iddeuda));
+        }
+        
+        return response($detalle->createRefi($request));
         
     }
 }

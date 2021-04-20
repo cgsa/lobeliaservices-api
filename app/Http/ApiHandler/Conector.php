@@ -17,5 +17,7 @@ interface Conector
     
     
     public function getResult();
+    
+    public function setDocument( $document );
 }
 

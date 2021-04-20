@@ -11,7 +11,8 @@ class CGDeudas
     
     public function getDeudaDetalle($iddeuda)
     {
-        $data = $this->findDeuda($iddeuda);
+        $data = $this->findDeudaById($iddeuda);
+        //dd($data);
         return [
             'deuda'=>$data,
             'detalle'=>$this->getDetalle($data)
@@ -19,7 +20,7 @@ class CGDeudas
     }
     
     
-    public function findDeuda($iddeuda)
+    public function findDeudaById($iddeuda)
     {
         $deuda = DeudasApi::where([
             ['idestadodeuda', '=', '1'],
@@ -33,9 +34,22 @@ class CGDeudas
     }
     
     
+    public function findDeudaByDocument($document)
+    {
+        $deuda = DeudasApi::where([
+            ['idestadodeuda', '=', '1'],
+            ['iddeuda', '=', $document],
+        ])->get();        
+        
+        
+        return $deuda;
+    }
+    
+    
     public function getDetalle($data)
     {
-        if($data->es_refinanciado){
+        //dd($data);
+        if(isset($data->es_refinanciado) && $data->es_refinanciado == 1){
             return ['plancreado' => $this->getPlanesCreados($data)];
         }
         
@@ -54,9 +68,25 @@ class CGDeudas
     
     public function getPlanes($data)
     {
-        return DB::connection('mysqlcontacto')->select('call comopago_sp03_getposiblesplanes(:iddeuda);', [
-            'iddeuda'=>$data->iddeuda
-        ]);;
+        if(isset($data->iddeuda))
+        {
+            return DB::connection('mysqlcontacto')->select('call comopago_sp03_getposiblesplanes(:iddeuda);', [
+                'iddeuda'=>$data->iddeuda
+            ]);
+        }
+        
+    }
+    
+    
+    public function createRefi($request)
+    {
+        $result = CGRefinanciacion::init($request)->store();
+        if(isset($result['error']))
+        {
+            return $result;
+        }
+        
+        return $this->getDeudaDetalle($request->deuda);
     }
     
     
