@@ -18,7 +18,7 @@ class SincronizarDeuda
     public function handle(Request $request, Closure $next)
     {
         //var_dump(request('documento'));die;
-        $handler = new Handler(request('documento'));
+        $handler = new Handler(request('documento'),false);
         
         if($handler->syncData())
         {

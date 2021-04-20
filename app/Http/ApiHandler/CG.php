@@ -46,7 +46,7 @@ class CG implements Conector
         $user = $this->findGender($this->document); 
         return $this->conn->select('call comopago_sp01_deudas(:tipo, :documento);', [
             'documento'=> $this->document,
-            'tipo'=>$user[0]->tipodocumento
+            'tipo'=>$user->first()->tipodocumento
         ]);
     }
     

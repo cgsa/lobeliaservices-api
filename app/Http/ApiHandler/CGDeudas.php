@@ -38,11 +38,11 @@ class CGDeudas
     {
         $deuda = DeudasApi::where([
             ['idestadodeuda', '=', '1'],
-            ['iddeuda', '=', $document],
+            ['doc_deudor', '=', $document],
         ])->get();        
         
         
-        return $deuda;
+        return $deuda->first();
     }
     
     
