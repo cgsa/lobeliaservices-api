@@ -57,7 +57,7 @@ class PyP implements Conector
         
         return implode('/', [
             $this->document,
-            $user->first()->sexo,
+            $user[0]->sexo,
             'json'
         ]);
     }

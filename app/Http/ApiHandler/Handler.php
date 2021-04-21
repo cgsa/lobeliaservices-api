@@ -71,14 +71,14 @@ class Handler
                 $this->insertData($conn->getSchema($value));
             }
         }
-        //dd("aquiiiiii2");
+        
     }
     
     
     
     private function insertData( DeudaScheme $scheme )
     {
-        //dd("aquiiiiii22");
+        
         DB::connection('mysqlcomopago')->table('usr_deudas_api')->insert(
             [
                 'codproducto' => $scheme->codProducto(), 
