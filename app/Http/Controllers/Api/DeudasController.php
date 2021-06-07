@@ -14,7 +14,7 @@ class DeudasController extends Controller
     
     public function __construct()
     {
-        $this->middleware('sincronizar.deuda',['only'=>['deudas']]);
+        $this->middleware('sincronizar.deuda',['only'=>['deudas','deudasBCRA']]);
     }
     
     /**
@@ -39,6 +39,21 @@ class DeudasController extends Controller
         
         return response(['deudas'=>$deudas->findDeudaByDocument($documento)]);
     }
+    
+    
+    /**
+     * Return an json with all debts by user.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function deudasBCRA($documento,$tipoDocumento)
+    {
+        
+        $deudas = new CGDeudas();
+        
+        return response(['deudas'=>$deudas->findDeudaByDocument($documento, 1)]);
+}
     
     /**
      * Return an json with all debts by user.

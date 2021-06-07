@@ -22,7 +22,7 @@ use App\Http\Controllers\Api\DeudasController;
 // });
 
 
-// Route::get('/',[SiteController::class, 'panel'])->name('index');
+// Route::get('/',[SiteController::class, 'registroContactame'])->name('index');
 
 Route::group([
     'prefix' => 'auth'
@@ -40,11 +40,16 @@ Route::group([
 });
 
 
+
+Route::post('contactame',[UserController::class, 'registroContactame']); 
+
+
 Route::group([
     'prefix' => 'usuarios'
 ], function () {
     
     Route::get('deudas/{documento}/{tipoDocumento}',[DeudasController::class, 'deudas']);
+    Route::get('deudas-bcra/{documento}/{tipoDocumento}',[DeudasController::class, 'deudasBCRA']);
     Route::get('deuda/detalle/{iddeuda}',[DeudasController::class, 'deudadetalle']);
     Route::post('deuda/create/refinanciacion',[DeudasController::class, 'createRefinanciacion']);
     

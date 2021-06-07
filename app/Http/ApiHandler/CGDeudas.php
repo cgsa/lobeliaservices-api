@@ -34,11 +34,12 @@ class CGDeudas
     }
     
     
-    public function findDeudaByDocument($document)
+    public function findDeudaByDocument($document, $sync = 3)
     {
         $deuda = DeudasApi::where([
             ['idestadodeuda', '=', '1'],
             ['doc_deudor', '=', $document],
+            ['tipo_sinc_api', '=', $sync]
         ])->get();        
         
         

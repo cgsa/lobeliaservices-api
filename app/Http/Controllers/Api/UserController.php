@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use App\Models\Contacto;
 
 class UserController extends Controller
 {
@@ -85,6 +86,35 @@ class UserController extends Controller
     public function user(Request $request)
     {
         return response()->json($request->user());
+    }
+    
+    
+    public function registroContactame(Request $request)
+    {
+        try {
+            
+            $request->validate([
+                'email'=>'required|email|max:100',
+                'telefono'=>'required',
+                'fecha'=>'required|date|after_or_equal:' . date('Y/m/d', time())
+            ]);
+            
+            Contacto::create( $request->all() );
+            
+            return response([
+                'data'=>[
+                    'success' => 'success',
+                    'message' => 'Su informacion esta siendo procesada para el contacto en la fecha prevista',
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            return response([
+                'error' => 'error',
+                'message' => $e->getMessage(),
+                ''
+            ], 500);
+        }
     }
     
     
