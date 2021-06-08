@@ -26,18 +26,34 @@ class DeudasController extends Controller
     public function deudas($documento,$tipoDocumento)
     {
         
-        $deudas = new CGDeudas();        
-        
-//         $deudaFinal = $deudas->map(function($deuda){
-//             $deuda['logo'] = (new Entidad())->getLogo($deuda);
-//             return $deuda;
-//         });
+        try {
+            
+            $deudas = new CGDeudas();
+            
+            //         $deudaFinal = $deudas->map(function($deuda){
+            //             $deuda['logo'] = (new Entidad())->getLogo($deuda);
+            //             return $deuda;
+            //         });
             //dd($deudaFinal);
-
-//         $handler = new Handler($documento);
-//         $handler->build();
+            
+            //         $handler = new Handler($documento);
+            //         $handler->build();
+            
+            return response([
+                'data'=>[
+                    'success' => 'success',
+                    'deudas'=>$deudas->findDeudaByDocument($documento)
+                ]                
+            ]);
+            
+        } catch (\Exception $e) {
+            return response([
+                'error' => 'error',
+                'message' => $e->getMessage(),
+                ''
+            ], 500);
+        }        
         
-        return response(['deudas'=>$deudas->findDeudaByDocument($documento)]);
     }
     
     
@@ -50,10 +66,25 @@ class DeudasController extends Controller
     public function deudasBCRA($documento,$tipoDocumento)
     {
         
-        $deudas = new CGDeudas();
-        
-        return response(['deudas'=>$deudas->findDeudaByDocument($documento, 1)]);
-}
+        try {
+            
+            $deudas = new CGDeudas();
+            
+            return response([
+                'data'=>[
+                    'success' => 'success',
+                    'deudas'=>$deudas->findDeudaByDocument($documento, 1)
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            return response([
+                'error' => 'error',
+                'message' => $e->getMessage(),
+                ''
+            ], 500);
+        }  
+    }
     
     /**
      * Return an json with all debts by user.
@@ -63,8 +94,22 @@ class DeudasController extends Controller
      */
     public function deudaDetalle($iddeuda)
     {
-        $detalle = new CGDeudas();        
-        return response($detalle->getDeudaDetalle($iddeuda));
+        
+        try {
+            
+            $detalle = new CGDeudas();
+            
+            return response([
+                'data'=>$detalle->getDeudaDetalle($iddeuda)
+            ]);
+            
+        } catch (\Exception $e) {
+            return response([
+                'error' => 'error',
+                'message' => $e->getMessage(),
+                ''
+            ], 500);
+        }
         
     }
     
@@ -76,17 +121,35 @@ class DeudasController extends Controller
      */
     public function createRefinanciacion(Request $request )
     {
-        $detalle = new CGDeudas();
-        $cls = new \stdClass();
-        $cls->iddeuda = $request->get('deuda');
         
-        $planExistente = $detalle->getPlanesCreados($cls);
-        
-        if( is_countable($planExistente) && count($planExistente) > 0 ){
-            return response($detalle->getDeudaDetalle($cls->iddeuda));
+        try {
+            
+            $detalle = new CGDeudas();
+            $cls = new \stdClass();
+            $cls->iddeuda = $request->get('deuda');
+            
+            $planExistente = $detalle->getPlanesCreados($cls);
+            
+            if( is_countable($planExistente) && count($planExistente) > 0 ){
+                return response([
+                    'data'=>$detalle->getDeudaDetalle($cls->iddeuda)
+                ]);
+            }
+            
+            return response([
+                'data'=>[
+                    'success' => 'success',
+                    'deudas'=>$detalle->createRefi($request)
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            return response([
+                'error' => 'error',
+                'message' => $e->getMessage(),
+                ''
+            ], 500);
         }
-        
-        return response($detalle->createRefi($request));
         
     }
 }

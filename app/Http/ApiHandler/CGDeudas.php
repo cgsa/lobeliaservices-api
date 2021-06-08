@@ -14,6 +14,7 @@ class CGDeudas
         $data = $this->findDeudaById($iddeuda);
         //dd($data);
         return [
+            'success' => 'success',
             'deuda'=>$data,
             'detalle'=>$this->getDetalle($data)
         ];
@@ -39,7 +40,8 @@ class CGDeudas
         $deuda = DeudasApi::where([
             ['idestadodeuda', '=', '1'],
             ['doc_deudor', '=', $document],
-            ['tipo_sinc_api', '=', $sync]
+            ['tipo_sinc_api', '=', $sync],
+            ['deuda_total', '>', 0]
         ])->get();        
         
         
