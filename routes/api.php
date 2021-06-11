@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Site\SiteController;
 use App\Http\Controllers\Api\DeudasController;
+use App\Http\Controllers\Api\EntidadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +53,15 @@ Route::group([
     Route::get('deudas-bcra/{documento}/{tipoDocumento}',[DeudasController::class, 'deudasBCRA']);
     Route::get('deuda/detalle/{iddeuda}',[DeudasController::class, 'deudadetalle']);
     Route::post('deuda/create/refinanciacion',[DeudasController::class, 'createRefinanciacion']);
+    
+});
+
+Route::group([
+    'prefix' => 'entidades'
+], function () {
+    
+    Route::get('/',[EntidadController::class, 'entidades']);
+    Route::post('consultar-deudas',[EntidadController::class, 'consultarDeudas']);
     
 });
 
