@@ -114,11 +114,14 @@ class Handler
     
     private function changeStatus()
     {
-        $deudas = DeudasApi::where('doc_deudor',$this->document)->get();
-        foreach ($deudas as $deuda) {
+        //$deudas = DeudasApi::where('doc_deudor',$this->document)->get();
+        DB::connection('mysqlcomopago')->update('UPDATE usr_deudas_api SET idestadodeuda = 0 WHERE doc_deudor =:documento', [
+            'documento'=>$this->document
+        ]);
+        /*foreach ($deudas as $deuda) {
             $deuda->idestadodeuda = 0;
             $deuda->save();
-        }
+        }*/
     }
     
     
