@@ -20,11 +20,11 @@ class SincronizarDeuda
         //var_dump(request('documento'));die;
         $handler = new Handler(request('documento'),false);
         
-        /*if($handler->syncData())
+        if($handler->syncData())
         {
-            
-        }*/
-        $handler->build();
+            $handler->build();
+        }
+        
         
         return $next($request);
     }
