@@ -46,16 +46,14 @@ class CGRefinanciacion
         DB::connection('mysqlcontacto')->beginTransaction();
         try {
             
-            
             //$this->eliminaRefinanciacion();
             $this->createDeuda()
             ->createRefinanciacion()
             ->createDetalleRefinanciacion()
-            ->createCodeBar();
-            
-            $this->syncData();
+            ->createCodeBar();          
             
             DB::connection('mysqlcontacto')->commit();
+            $this->syncData();
             
         } catch (\Exception $e) {
             
@@ -78,6 +76,7 @@ class CGRefinanciacion
     
     private function createDeuda()
     {
+        //dd($this->iddeuda);
         DB::connection('mysqlcontacto')->select('call comopago_sp04_creadeudaact( :iddeuda, :idpromo);', [
             'iddeuda'=>$this->iddeuda,
             'idpromo'=>$this->idpromo

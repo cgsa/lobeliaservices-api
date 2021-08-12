@@ -2,11 +2,9 @@
 namespace app\Http\ApiHandler;
 
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Models\Actualizacion;
 use Illuminate\Support\Facades\DB;
-use App\Models\DeudasApi;
 
 class Handler
 {
