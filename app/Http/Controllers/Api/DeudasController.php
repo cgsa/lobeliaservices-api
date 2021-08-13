@@ -135,11 +135,13 @@ class DeudasController extends Controller
                     'data'=>$detalle->getDeudaDetalle($cls->iddeuda)
                 ]);
             }
+
+            $result = $detalle->createRefi($request);
             
             return response([
                 'data'=>[
                     'success' => 'success',
-                    'deudas'=>$detalle->createRefi($request)
+                    'deudas'=> $result
                 ]
             ]);
             

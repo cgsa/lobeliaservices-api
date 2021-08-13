@@ -27,7 +27,7 @@ class CGRefinanciacion
     
     
     
-    private function syncData()
+    public function syncData()
     {
         $handler = new Handler($this->documento,true);
         $handler->build();
@@ -47,22 +47,23 @@ class CGRefinanciacion
         try {
             
             //$this->eliminaRefinanciacion();
+            
             $this->createDeuda()
             ->createRefinanciacion()
             ->createDetalleRefinanciacion()
-            ->createCodeBar();          
-            
+            ->createCodeBar();      
             DB::connection('mysqlcontacto')->commit();
-            $this->syncData();
+            return $this;
             
         } catch (\Exception $e) {
             
             DB::connection('mysqlcontacto')->rollback();
-            
-            return [
-                'error' => true,
-                'message'=> $e->getMessage()
-            ];
+
+            return response([
+                'error' => 'error',
+                'message' => $e->getMessage(),
+                ''
+            ], 500);
         }
         
         return [

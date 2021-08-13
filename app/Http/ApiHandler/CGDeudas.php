@@ -84,10 +84,11 @@ class CGDeudas
     public function createRefi($request)
     {
         $result = CGRefinanciacion::init($request)->store();
-        if(isset($result['error']))
+        $result->syncData();
+        /*if(isset($result['error']))
         {
             return $result;
-        }
+        }*/
         
         return $this->getDeudaDetalle($request->deuda);
     }

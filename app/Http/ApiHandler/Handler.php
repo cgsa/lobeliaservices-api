@@ -63,6 +63,7 @@ class Handler
     private function process(Conector $conn)
     {
         $data = $conn->setDocument($this->document)->start();
+        
         if(is_countable($data->getResult())  && count($data->getResult()) > 0 ){
             
             foreach ($data->getResult() as $value){
@@ -101,11 +102,16 @@ class Handler
     
     public function registerSync()
     {
-        return Actualizacion::create([
+        DB::connection('mysql')->table('actualizacions')->insert([
             'documento_deudor' => $this->document,
             'client_id' => $this->document,
             'updated_at'=> Carbon::now()
         ]);
+        /*return Actualizacion::create([
+            'documento_deudor' => $this->document,
+            'client_id' => $this->document,
+            'updated_at'=> Carbon::now()
+        ]);*/
     }
     
     
