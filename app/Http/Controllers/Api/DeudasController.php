@@ -138,7 +138,7 @@ class DeudasController extends Controller
 
             $result = $detalle->createRefi($request);
             return response([
-                'data'=>$detalle->createRefi($request)
+                'data'=>$result
             ]);
             
         } catch (\Exception $e) {

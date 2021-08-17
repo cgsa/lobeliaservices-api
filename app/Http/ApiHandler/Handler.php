@@ -105,7 +105,8 @@ class Handler
         DB::connection('mysql')->table('actualizacions')->insert([
             'documento_deudor' => $this->document,
             'client_id' => $this->document,
-            'updated_at'=> Carbon::now()
+            'updated_at'=> Carbon::now(),
+            'created_at'=> Carbon::now()
         ]);
         /*return Actualizacion::create([
             'documento_deudor' => $this->document,
